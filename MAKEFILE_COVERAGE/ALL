@@ -1,0 +1,7 @@
+# vsim -l ALL .log -voptargs="+acc" -assertdebug -c tb_ip_TIMER "+TEST=ALL" -do "log -r /*; run -all; quit" 
+# Start time: 22:51:35 on Dec 12,2025
+# ** Error (suppressible): (vsim-19) Failed to access library '' at "".
+# No such file or directory. (errno = ENOENT)
+# Error loading design
+# End time: 22:51:35 on Dec 12,2025, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
