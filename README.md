@@ -17,7 +17,10 @@ A Timer Module in its most basic form is a digital logic circuit that counts up 
 | 0x03   | **TCNT** (Counter)   | Current counter value        | 8        | R      | 0           |
 
 ## [Simulation Environment]
-  <img width="800" alt="image" src="https://github.com/user-attachments/assets/99579b70-6932-4192-976b-384ab6682e23">
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/99579b70-6932-4192-976b-384ab6682e23">
+
+### [Test plan]
+<img width="1825" height="762" alt="image" src="https://github.com/user-attachments/assets/9ce151a5-7496-4c67-9db8-fda4dec86373" />
 
 ## [Simulation Results using Makefile]
 <img width="1879" height="528" alt="image" src="https://github.com/user-attachments/assets/0a446a8e-2c00-4867-b93e-4e3c2562fc59" />
