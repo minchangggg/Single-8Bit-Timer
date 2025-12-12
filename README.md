@@ -19,5 +19,9 @@ A Timer Module in its most basic form is a digital logic circuit that counts up 
 ## [Simulation Environment]
   <img width="800" alt="image" src="https://github.com/user-attachments/assets/99579b70-6932-4192-976b-384ab6682e23">
 
-## [Simulation Result]
+## [Simulation Results using Makefile]
 <img width="1879" height="528" alt="image" src="https://github.com/user-attachments/assets/0a446a8e-2c00-4867-b93e-4e3c2562fc59" />
+
+<img width="1920" height="988" alt="image" src="https://github.com/user-attachments/assets/fb34e776-e6db-4b97-ab0f-9ceb16bb1f01" />
+
+<img width="1920" height="988" alt="image" src="https://github.com/user-attachments/assets/dc218d1a-bf05-4680-9005-fe590229db95" />
