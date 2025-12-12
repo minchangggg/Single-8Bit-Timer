@@ -1,4 +1,3 @@
-// STATUS: OK
 
 `ifndef OVF_UDF_COMP_V
 `define OVF_UDF_COMP_V
@@ -44,8 +43,8 @@ module ovf_udf_comp (
   output reg        		    TMR_UDF          // Underflow flag
 );
   
-  reg [7:0] TCNT_d; // previous TCNT
-  reg [7:0] TSR_d;  // previous TSR
+  reg [`DATA_WIDTH-1:0] TCNT_d; // previous TCNT
+  reg [`DATA_WIDTH-1:0] TSR_d;  // previous TSR
 
   always @(posedge pclk or negedge preset_n) begin
     if (!preset_n) begin
@@ -55,6 +54,7 @@ module ovf_udf_comp (
       TCNT_d  <= {`DATA_WIDTH{1'b0}};
       TSR_d   <= {`DATA_WIDTH{1'b0}};
     end else begin
+      // detect SW-clear
       if ((TMR_OVF && !TSR[0] && TSR_d[0]) || (TMR_UDF && !TSR[1] && TSR_d[1])) begin
         TMR_OVF <= (TMR_OVF && !TSR[0] && TSR_d[0]) ? 1'b0 : TMR_OVF;
         TMR_UDF <= (TMR_UDF && !TSR[1] && TSR_d[1]) ? 1'b0 : TMR_UDF;

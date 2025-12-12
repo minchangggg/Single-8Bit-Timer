@@ -1,5 +1,3 @@
-// STATUS: OK
-
 `ifndef POS_CNT_EDGE_DETECT_V
 `define POS_CNT_EDGE_DETECT_V
 

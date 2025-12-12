@@ -3,11 +3,11 @@
 `ifndef RW_REG_CONTROL_V
 `define RW_REG_CONTROL_V
 
-`include "rtl/reg_def.sv"
+`include "reg_def.sv"
 // `DATA_WIDTH = 8
 
 module rw_reg_control #(
-  parameter ADDR_WIDTH = 8
+  parameter int ADDR_WIDTH = `ADDR_WIDTH
 )(
   // APB INTERFACE SIGNALS
   input  wire                   PCLK,
@@ -38,8 +38,8 @@ module rw_reg_control #(
 
   // Internal wires for connecting sub-modules
   wire                   apb_flag;
-  wire        		 apb_pready;	  
-  wire      		 apb_pslverr;	  
+  wire                   apb_pready;	  
+  wire                   apb_pslverr;	  
   wire [`DATA_WIDTH-1:0] read_prdata; // Internal wire to connect read logic output to top-level PRDATA
   
   // ------------------------------------------------------------------
@@ -205,8 +205,8 @@ module rw_write_logic #(
       TCR <= `TCR_RST;
       TSR <= `TSR_RST;
     end else begin
-      // Hardware set flags
-//       TSR <= {6'b0000_00, udf_flag, ovf_flag};
+
+      // Hardware set flags - TSR <= {6'b0000_00, udf_flag, ovf_flag};
       if (write_en) begin
         TDR <= (w_reg_sel[0]) ? wdata_tdr : TDR;
         TCR <= (w_reg_sel[1]) ? wdata_tcr : TCR;
@@ -216,14 +216,12 @@ module rw_write_logic #(
           TSR[1] <= (wdata_tsr[1]) ? 1'b0 : TSR[1]; // clear bit UDF if wdata_tsr[0] = 1
         end else begin
           // Hardware set flags
-//           TSR <= {6'b0000_00, udf_flag, ovf_flag};
           TSR[0] <= (ovf_flag) ? 1'b1 : TSR[0];
           TSR[1] <= (udf_flag) ? 1'b1 : TSR[1];
         end
       end else begin 
         TDR <= TDR;
         TCR <= TCR;
-//         TSR <= TSR;
         TSR <= {6'b0000_00, udf_flag, ovf_flag}; // Continuously update TSR with current flags
       end
     end
@@ -237,44 +235,46 @@ module APB_trans #(
   parameter ADDR_WIDTH = 8
 )(
   // SIGNAL FOR APB INTERFACE
-  input  wire                  pclk,
-  input  wire                  preset_n,
-  input  wire                  psel,
-  input  wire                  penable,
-  input  wire                  pwrite,
-  input  wire [ADDR_WIDTH-1:0] paddr,
+  input  logic                  pclk,
+  input  logic                  preset_n,
+  input  logic                  psel,
+  input  logic                  penable,
+  input  logic                  pwrite,
+  input  logic [ADDR_WIDTH-1:0] paddr,
   
-  output wire                  flag,              
-  output reg                   pready,
-  output reg                   pslverr             
+  output logic                  flag,              
+  output logic                   pready,
+  output logic                   pslverr             
 );
   
   // FSM state encoding
-  localparam IDLE = 2'b00, SETUP = 2'b01, ACCESS = 2'b10;
-  reg [1:0]  cur_state, next_state;
-  wire       flag_init;
-  wire       invalid_addr;
+  typedef enum logic [1:0] {IDLE, SETUP, ACCESS} state_t;
+  state_t cur_state, next_state;
+
+  logic       flag_init;
+  logic       invalid_addr;
 
   // FSM: State transition
-  always @(posedge pclk or negedge preset_n) begin
-    if (!preset_n) cur_state <= IDLE;
-    else           cur_state <= next_state;
+  always_ff @(posedge pclk or negedge preset_n) begin
+    if (!preset_n) 
+      cur_state <= IDLE;
+    else           
+      cur_state <= next_state;
   end
 
   // FSM: Next state logic
-  always @(*) begin
-    case (cur_state)
+  always_comb begin
+    unique case (cur_state)
       IDLE:    next_state = (psel  & !penable) ? SETUP : IDLE;
-//       SETUP:   next_state = (!psel | !penable) ? IDLE  : ACCESS;
-      SETUP:  next_state = (psel &&  penable) ? ACCESS : SETUP;
+      SETUP :  next_state = (psel &&  penable) ? ACCESS :
+                            (!psel)            ? IDLE   : SETUP;
       ACCESS:  next_state = IDLE;
       default: next_state = IDLE;
     endcase
   end
   
   // ..... CHECK
-//   assign flag_init = (cur_state == SETUP) && (next_state == ACCESS);
-  assign flag_init = (cur_state == IDLE) && (next_state == SETUP);
+  assign flag_init = (cur_state == SETUP) && (next_state == ACCESS);
   
   // Invalid address detection logic
   assign invalid_addr = pwrite 

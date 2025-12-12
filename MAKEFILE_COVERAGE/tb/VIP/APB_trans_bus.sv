@@ -1,211 +1,240 @@
 `ifndef __APB_TRANS_BUS_V__
 `define __APB_TRANS_BUS_V__
 
-`include "rtl/reg_def.sv"    
+`include "rtl/reg_def.sv"
+`include "rtl/apb_if.sv"
 
+// APB master BFM use apb_if.MASTER
 module APB_trans_bus #(
-  parameter ADDR_WIDTH = 8
+  parameter int ADDR_WIDTH = `ADDR_WIDTH,
+  parameter int DATA_WIDTH = `DATA_WIDTH
 )(
-  input wire                   PCLK, PRESETn,
-  input wire 	               PREADY, PSLVERR,
-  input wire [`DATA_WIDTH-1:0] PRDATA,
-  
-  output reg 		       PSEL, PENABLE, PWRITE,
-  output reg [ADDR_WIDTH-1:0]  PADDR,
-  output reg [`DATA_WIDTH-1:0] PWDATA
+  apb_if.MASTER apb
 );
 
-  // Always block for reset handling
-  task initialization; 
-    begin
-      PSEL    <= 1'b0;
-      PENABLE <= 1'b0;
-      PWRITE  <= 1'b0;
-      PADDR   <= {`DATA_WIDTH{1'b1}};
-      PWDATA  <= {`DATA_WIDTH{1'b0}};
-    end
-  endtask
+  // ---------------------------------------------------
+  // INIT: set for IDLE
+  // ---------------------------------------------------
+  initial begin
+    apb.PSEL    = 1'b0;
+    apb.PENABLE = 1'b0;
+    apb.PWRITE  = 1'b0;
+    apb.PADDR   = '0;
+    apb.PWDATA  = '0;
+  end
 
-  // APB write task
-  task apb_write (
-    input [ADDR_WIDTH-1:0]  addr, 
-    input [`DATA_WIDTH-1:0] data
+  // ---------------------------------------------------
+  // Low-level APB write (no wait-state)
+  // ---------------------------------------------------
+  task automatic apb_write (
+    input  logic [ADDR_WIDTH-1:0] addr,
+    input  logic [DATA_WIDTH-1:0] data
   );
     begin
-      // reset
-      PSEL    = 1'b0;
-      PENABLE = 1'b0;
-      PWRITE  = 1'b0;
-      PWDATA  = 8'h00;
+      // IDLE -> SETUP
+      @(posedge apb.PCLK);
+      apb.PADDR   <= addr;
+      apb.PWDATA  <= data;
+      apb.PWRITE  <= 1'b1;
+      apb.PSEL    <= 1'b1;
+      apb.PENABLE <= 1'b0;
 
-      @(posedge PCLK);
-      PADDR   = addr;
-      PWDATA  = data;
-      PWRITE  = 1'b1;
-      PSEL    = 1'b1;
-      PENABLE = 1'b0;
+      // SETUP -> ACCESS
+      @(posedge apb.PCLK);
+      apb.PENABLE <= 1'b1;
 
-      @(posedge PCLK);
-      PENABLE = 1'b1;
+      // ACCESS: wait PREADY (if design always has PREADY=1 => only 1 cycle)
+      do @(posedge apb.PCLK); while (!apb.PREADY);
 
-      // Wait for PREADY to be high to end the transaction
-      // wait (PREADY);
-      @(posedge PCLK); 
-      // After the transaction is complete, end the cycle
-      PSEL    = 1'b0;
-      PENABLE = 1'b0;
-      PWDATA  = {`DATA_WIDTH{1'b0}};
+      // Kết thúc: về IDLE
+      apb.PSEL    <= 1'b0;
+      apb.PENABLE <= 1'b0;
+      apb.PWRITE  <= 1'b0;
+      apb.PADDR   <= '0;
+      apb.PWDATA  <= '0;
     end
   endtask
 
-  // APB read task
-  task apb_read (
-    input      [ADDR_WIDTH-1:0]  addr,
-    output reg [`DATA_WIDTH-1:0] data_out
+  // ---------------------------------------------------
+  // Low-level APB read
+  // ---------------------------------------------------
+  task automatic apb_read (
+    input  logic [ADDR_WIDTH-1:0] addr,
+    output logic [DATA_WIDTH-1:0] data
   );
     begin
-      @(posedge PCLK);
-      // Setup phase
-      PADDR <= addr;
-      PWRITE <= 1'b0;
-      PSEL <= 1'b1;
-      PENABLE <= 1'b0;
+      // IDLE -> SETUP
+      @(posedge apb.PCLK);
+      apb.PADDR   <= addr;
+      apb.PWRITE  <= 1'b0;
+      apb.PSEL    <= 1'b1;
+      apb.PENABLE <= 1'b0;
 
-      @(posedge PCLK);
-      // Access phase
-      PENABLE <= 1'b1;
+      // SETUP -> ACCESS
+      @(posedge apb.PCLK);
+      apb.PENABLE <= 1'b1;
 
-      // Wait for PREADY to be high to end the transaction
-      // wait (PREADY);
-      @(posedge PCLK);
-      // After the transaction is complete, end the cycle
-      data_out = PRDATA;
-      PSEL <= 1'b0;
-      PENABLE <= 1'b0;     
+      // ACCESS: wait PREADY, get PRDATA
+      do @(posedge apb.PCLK); while (!apb.PREADY);
+      data = apb.PRDATA;
+
+      // Kết thúc: về IDLE
+      apb.PSEL    <= 1'b0;
+      apb.PENABLE <= 1'b0;
+      apb.PADDR   <= '0;
     end
   endtask
 
-  // clear TSR 
-  task clear_tsr;
+  // ---------------------------------------------------
+  // clear_tsr: clear flag OVF/UDF in TSR by writting 1
+  // ---------------------------------------------------
+  task automatic clear_tsr;
     begin
-      apb_write(`TSR_ADDR, {`DATA_WIDTH{1'b1}}); 
+      apb_write(`TSR_ADDR, {DATA_WIDTH{1'b1}});
     end
   endtask
 
-  // set up TCR value
-  function automatic [`DATA_WIDTH-1:0] config_TCR (
-    input load,
-    input updown,
-    input en,
-    input [1:0] cks
+  // ---------------------------------------------------
+  // config_TCR
+  // ---------------------------------------------------
+  function automatic [DATA_WIDTH-1:0] config_TCR (
+    input logic       load,
+    input logic       updown,
+    input logic       en,
+    input logic [1:0] cks
   );
-    reg [`DATA_WIDTH-1:0] TCR;
+    logic [DATA_WIDTH-1:0] TCR;
     begin
-      TCR = {`DATA_WIDTH{1'b0}};
-      TCR[`TCR_LOAD_BIT]             = load;
-      TCR[`TCR_UPDOWN_BIT]           = updown;
-      TCR[`TCR_EN_BIT]               = en;
-      TCR[`TCR_CKS_MSB:`TCR_CKS_LSB] = cks;
+      TCR = '0;
+      TCR[`TCR_LOAD_BIT]               = load;
+      TCR[`TCR_UPDOWN_BIT]             = updown;
+      TCR[`TCR_EN_BIT]                 = en;
+      TCR[`TCR_CKS_MSB:`TCR_CKS_LSB]   = cks;
       config_TCR = TCR;
     end
   endfunction
 
-// program and start: write TDR, cause load, enable counting
-task automatic program_and_start (
-    input [`DATA_WIDTH-1:0] start_val,
-    input                   updown, // 0: up, 1: down
-    input [1:0]             cks
-);
-    reg [`DATA_WIDTH-1:0] tcr_config;
-
+  // ------------------------------------------------------------
+  // Helper: cấu hình TCR sao cho timer DISABLE (EN = 0)
+  //         + clear TSR, dùng cho fake_overflow / fake_underflow
+  // ------------------------------------------------------------
+  task configure_timer_disabled (
+    input bit       updown, // 0: up, 1: down
+    input [1:0]     cks
+  );
+    reg [`DATA_WIDTH-1:0] tcr_cfg;
     begin
-        // Clear all flags via TSR before starting
-        clear_tsr();
-        
-        // Load TDR with start_val
-        apb_write(`TDR_ADDR, start_val);
+      // clear status register cho sạch flag
+      clear_tsr();
 
-        // Configure TCR with load bit = 1
-        tcr_config = config_TCR(1'b1, updown, 1'b1, cks);
-        apb_write(`TCR_ADDR, tcr_config);
-        
-        // Delay 1 cycle for register update
-        // @(posedge `PCLK);
+      // LOAD = 0, EN = 0, giữ đúng mode up/down & CKS
+      tcr_cfg = config_TCR(
+                  /*load   =*/ 1'b0,
+                  /*updown =*/ updown,
+                  /*en     =*/ 1'b0,
+                  /*cks    =*/ cks
+                );
 
-        // Disable load bit of TCR and start counting
-        tcr_config = config_TCR(1'b0, updown, 1'b1, cks);
-        apb_write(`TCR_ADDR, tcr_config);
-        
-        // Delay 1 cycle for register update
-        // @(posedge `PCLK);
+      apb_write(`TCR_ADDR, tcr_cfg);
     end
-endtask
+  endtask
 
-task pause_counter (
-    input       updown, // 0: up, 1: down
-    input [1:0] cks
-);
-   reg [`DATA_WIDTH-1:0] tcr_config;
-   begin
-      // Disable load bit and enable bit of TCR 
-      tcr_config = config_TCR(1'b0, updown, 1'b0, cks);
+  // ------------------------------------------------------------
+  // Helper: load_once
+  //   - Ghi start_val vào TDR
+  //   - Kéo LOAD=1 1 lần trong khi EN=0 để nạp TDR -> TCNT
+  //   - Sau đó hạ LOAD về 0, timer vẫn disable (không đếm)
+  //   => Dùng trong fake_overflow / fake_underflow
+  // ------------------------------------------------------------
+  task load_once (
+    input [`DATA_WIDTH-1:0] start_val,
+    input bit               updown,
+    input [1:0]             cks
+  );
+    reg [`DATA_WIDTH-1:0] tcr_cfg;
+    begin
+      // Ghi giá trị vào TDR
+      apb_write(`TDR_ADDR, start_val);
+
+      // 1. LOAD=1, EN=0 để nạp vào TCNT
+      tcr_cfg = config_TCR(
+                  /*load   =*/ 1'b1,
+                  /*updown =*/ updown,
+                  /*en     =*/ 1'b0,
+                  /*cks    =*/ cks
+                );
+      apb_write(`TCR_ADDR, tcr_cfg);
+
+      // 2. Hạ LOAD về 0, vẫn EN=0 để giữ nguyên TCNT, không cho chạy
+      tcr_cfg = config_TCR(
+                  /*load   =*/ 1'b0,
+                  /*updown =*/ updown,
+                  /*en     =*/ 1'b0,
+                  /*cks    =*/ cks
+                );
+      apb_write(`TCR_ADDR, tcr_cfg);
+    end
+  endtask
+
+  // ---------------------------------------------------
+  // program_and_start:
+  //   - clear TSR
+  //   - ghi TDR = start_val
+  //   - TCR: LOAD=1, EN=1
+  //   - sau 1 xung PCLK: LOAD=0, EN=1 => bắt đầu đếm
+  // ---------------------------------------------------
+  task automatic program_and_start (
+    input logic [DATA_WIDTH-1:0] start_val,
+    input logic                  updown,   // 0: up, 1: down
+    input logic [1:0]            cks
+  );
+    logic [DATA_WIDTH-1:0] tcr_config;
+    begin
+      // Clear flag trước
+      clear_tsr();
+
+      // Ghi TDR
+      apb_write(`TDR_ADDR, start_val);
+
+      // TCR: LOAD=1, EN=1
+      tcr_config = config_TCR(1'b1, updown, 1'b1, cks);
       apb_write(`TCR_ADDR, tcr_config);
-   end 
-endtask
 
-task resume_counter (
-    input       updown, // 0: up, 1: down
-    input [1:0] cks
-);
-   reg [`DATA_WIDTH-1:0] tcr_config;
-   begin
-      // Disable load bit and enable bit of TCR 
+      // Sau 1 nhịp PCLK, tắt LOAD (0), vẫn EN=1 để counter chạy
+      @(posedge apb.PCLK);
       tcr_config = config_TCR(1'b0, updown, 1'b1, cks);
       apb_write(`TCR_ADDR, tcr_config);
-   end 
-endtask
+    end
+  endtask
 
-//   // -------------------
-//   // Check TCNT value
-//   // -------------------
-//   task check_tcnt_value(
-//     input [`DATA_WIDTH-1:0] expected_value
-//   );
-//     reg [`DATA_WIDTH-1:0] actual_value;
-//     begin
-//       // Truyền biến 'actual_value' vào task và đọc giá trị trả về
-//       apb_read(`TCNT_ADDR, actual_value);
-//       if (actual_value == expected_value)
-//         $display("CHECK TCNT PASSED: 0x%0h", actual_value);
-//       else
-//         $display("CHECK TCNT FAILED: got=0x%0h, expected=0x%0h",
-//           actual_value, expected_value);
-//     end
-//   endtask
+  // ---------------------------------------------------
+  // pause_counter: dừng timer (EN=0)
+  // ---------------------------------------------------
+  task automatic pause_counter (
+    input logic       updown,
+    input logic [1:0] cks
+  );
+    logic [DATA_WIDTH-1:0] tcr_config;
+    begin
+      tcr_config = config_TCR(1'b0, updown, 1'b0, cks);
+      apb_write(`TCR_ADDR, tcr_config);
+    end
+  endtask
 
-//   // -------------------
-//   // Check OVF/UDF flags
-//   // -------------------
-//   task check_ovf_udf_flags(
-//     input ovf_expected,
-//     input udf_expected
-//   );
-//     reg [`DATA_WIDTH-1:0] tsr_value;
-//     reg ovf_actual, udf_actual;
-//     begin
-//       // Truyền biến 'tsr_value' vào task và đọc giá trị trả về
-//       apb_read(`TSR_ADDR, tsr_value);
-//       ovf_actual = tsr_value[`TMR_OVF_BIT];
-//       udf_actual = tsr_value[`TMR_UDF_BIT];
-//       if ((ovf_actual == ovf_expected) && (udf_actual == udf_expected))
-//         $display("CHECK FLAGS PASSED: OVF=%b, UDF=%b", ovf_actual, udf_actual);
-//       else
-//         $display("CHECK FLAGS FAILED: got OVF=%b, UDF=%b, expected OVF=%b, UDF=%b",
-//           ovf_actual, udf_actual, ovf_expected, udf_expected);
-//     end
-//   endtask
+  // ---------------------------------------------------
+  // resume_counter: chạy tiếp timer (EN=1)
+  // ---------------------------------------------------
+  task automatic resume_counter (
+    input logic       updown,
+    input logic [1:0] cks
+  );
+    logic [DATA_WIDTH-1:0] tcr_config;
+    begin
+      tcr_config = config_TCR(1'b0, updown, 1'b1, cks);
+      apb_write(`TCR_ADDR, tcr_config);
+    end
+  endtask
 
 endmodule
 
 `endif // __APB_TRANS_BUS_V__
-

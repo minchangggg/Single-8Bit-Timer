@@ -1,454 +1,496 @@
 m255
 K4
 z2
+!s12c _opt
+Z0 !s99 nomlopt
+!s11f vlog 2023.4 2023.10, Oct  9 2023
 13
-cModel Technology
-Z0 dC:/Users/minht/OneDrive/DOCUME~1/_8_Bit_Timer_20_8_25
-!s112 0.1
+!s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
+cModel Technology
+Z1 d/home/meynchan/Desktop/Single-8Bit-Timer-main/MAKEFILE_COVERAGE
 T_opt
-Vn2DT<9m`zGDKkLWKnHW8^3
-Z1 04 11 4 work tb_ip_TIMER fast 0
-=1-64bc5838ae4b-68a7c5eb-27-49ec
-Z2 o-quiet -auto_acc_if_foreign -work work
+!s110 1765310918
+VP8`:C9aJJgeUP>`3JE44g1
+04 11 4 work tb_ip_TIMER fast 0
+=1-000ae431a4f1-693881c6-848a7-a48b
+R0
+!s12f OEM100
+!s12b OEM100
+!s124 OEM10U17 
+o-quiet -auto_acc_if_foreign -work work +acc
+Z2 tCvgOpt 0
 n@_opt
-Z3 OL;O;10.2c;57
-Z4 dC:/Users/minht/OneDrive/DOCUME~1/_8_Bit_Timer_20_8_25
-!s110 1755825643
-T_opt1
-VfGN9N1Y1bOXTFbaYB_Ldb1
+OL;O;2023.4;77
+Yapb_if
+Z3 2tb/tb_ip_TIMER.sv
+Z4 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z5 !s110 1765310906
+!i10b 1
+!s100 GCEWA3zI0ng4`27KZ77JZ3
+I3BCBXAUUCgCDY@BKJJcA52
+S1
 R1
-=1-64bc5838ae4b-68a596f9-1c5-19c0
+Z6 w1765304429
+Frtl/apb_if.sv
+Z7 Ftb/tb_ip_TIMER.sv
+!i122 0
+L0 9 0
+Z8 VDg1SIo80bB@j0V0VzS_@n1
+Z9 OL;L;2023.4;77
+r1
+!s85 0
+31
+Z10 !s108 1765310906.000000
+Z11 !s107 tb/TestCase/test_tmr_fake_udf_ovf.sv|tb/TestCase/test_tmr_rst_t_load_pclk2.sv|tb/TestCase/test_tmr_rst_plck2.sv|tb/TestCase/test_tmr_func_pause.sv|tb/TestCase/test_tmr_func_forkjoin.sv|tb/TestCase/test_tmr_func_basic.sv|tb/TestCase/test_tmr_reg.sv|rtl/ovf_udf_comp.sv|rtl/cnt_unit.sv|rtl/logic_control.sv|rtl/pos_cnt_edge_detect.sv|rtl/rw_reg_control.sv|rtl/IP_TIMER.sv|tb/VIP/APB_trans_bus.sv|tb/VIP/cnt_sys_signal.sv|rtl/apb_if.sv|rtl/reg_def.sv|tb/tb_ip_TIMER.sv|
+Z12 !s90 -coveropt|3|+cover|+acc|+access+rwc|-f|compile.f|
+!i113 0
+Z13 !s102 -coveropt 3 +cover
+Z14 o-coveropt 3 +cover +acc +access+rwc -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z15 !s92 -coveropt 3 +cover +acc +access+rwc +incdir+rtl +incdir+tb +incdir+tb/VIP +incdir+tb/TestCase -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R2
-n@_opt1
+vAPB_trans
 R3
 R4
-!s110 1755682553
-T_opt2
-!s110 1755853879
-Vc]U1]^EZPD<LWEQKCT5Dk0
+R5
+!i10b 1
+!s100 EK3_k7Z3Z<Fl<]7b[RH2g3
+IU<DFW4jMGaRcNQPo:EFeS1
+S1
 R1
-=1-64bc5838ae4b-68a83437-c6-5058
+R6
+Z16 Frtl/rw_reg_control.sv
+R7
+!i122 0
+L0 234 64
+R8
+R9
+r1
+!s85 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
 R2
-n@_opt2
-R3
-vAPB_trans
-Z5 DXx6 sv_std 3 std 0 22 `a<MJET1=lN@jzbA7kHm;1
-Z6 !s110 1755853873
-I[1<<@_?G5KoQ=4ii:[0SH1
-Z7 V`JN@9S9cnhjKRR_L]QIcM3
-Z8 !s105 IP_TIMER_sv_unit
-S1
-Z9 dC:/Users/minht/OneDrive/DOCUME~1/_8_Bit_Timer_22_8_25_testforkjoin
-Z10 w1755825045
-Z11 Frtl/rw_reg_control.sv
-Z12 8rtl/IP_TIMER.sv
-Z13 Frtl/IP_TIMER.sv
-L0 236
-Z14 OL;L;10.2c;57
-r1
-31
-Z15 !s108 1755853873.552000
-Z16 !s107 tb/VIP/APB_trans_bus.sv|tb/VIP/cnt_sys_signal.sv|rtl/ovf_udf_comp.sv|rtl/cnt_unit.sv|rtl/logic_control.sv|rtl/pos_cnt_edge_detect.sv|rtl/rw_reg_control.sv|tb/tb_ip_TIMER.sv|rtl/IP_TIMER.sv|rtl/reg_def.sv|
-Z17 !s90 -reportprogress|300|-coveropt|3|+cover|+acc|-f|compile.f|
-Z18 !s102 -coveropt 3 +cover
-Z19 o-coveropt 3 +cover +acc -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
-Z20 !s92 -coveropt 3 +cover +acc +incdir+rtl +incdir+tb +incdir+tb/VIP +incdir+tb/TestCase -L mtiAvm -L mtiOvm -L mtiUvm -L mtiUPF
 n@a@p@b_trans
-!s100 eda2n=m7:@PQKQQ:^iQzM0
-!i10b 1
-!s85 0
-!i111 0
 vAPB_trans_bus
+R3
+R4
 R5
-R6
-IBdX7FU=Q56ACl7L=iCiDi2
-R7
-Z21 !s105 tb_ip_TIMER_sv_unit
+!i10b 1
+!s100 c6D>5YaA2IKmDT^Xe8H9[3
+IS<hzPY0EGTiJSFBk[_Om[2
 S1
-R9
-Z22 w1755853866
+R1
+R6
 Ftb/VIP/APB_trans_bus.sv
-Z23 8tb/tb_ip_TIMER.sv
-Z24 Ftb/tb_ip_TIMER.sv
-L0 6
-R14
+R7
+!i122 0
+L0 8 231
+R8
+R9
 r1
+!s85 0
 31
+R10
+R11
+R12
+!i113 0
+R13
+R14
 R15
-R16
-R17
-R18
-R19
-R20
+R2
 n@a@p@b_trans_bus
-!s100 cPm4=e^`JhQKA6BI71dlm2
-!i10b 1
-!s85 0
-!i111 0
 vclk_sel_synced_alt
+R3
+R4
 R5
-R6
-I1IeYTCZzOI[5PRnWoc0XG0
-R7
-R8
-S1
-R9
-R10
-Z25 Frtl/pos_cnt_edge_detect.sv
-R12
-R13
-L0 84
-R14
-r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 F_XdoZCBDdUf8X;NIlH]Z1
 !i10b 1
+!s100 Y:4i;2_J;h?5@CG^zBIiZ0
+IXL?jnja@3OdmJAUO78J@Q1
+S1
+R1
+R6
+Z17 Frtl/pos_cnt_edge_detect.sv
+R7
+!i122 0
+L0 82 36
+R8
+R9
+r1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vcnt_clk_in_gen
+R3
+R4
 R5
-R6
-IO53VO]WfKZLIC4FaFzYPg0
-R7
-R21
-S1
-R9
-R22
-Z26 Ftb/VIP/cnt_sys_signal.sv
-R23
-R24
-L0 41
-R14
-r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 Canh6kCRDMAY=H?GJPoZm1
 !i10b 1
+!s100 ]XWazK8C16hEKlEPH@9k31
+I0]TQo=TbiCh9IlhRSiO_j1
+S1
+R1
+R6
+Z18 Ftb/VIP/cnt_sys_signal.sv
+R7
+!i122 0
+L0 44 25
+R8
+R9
+r1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vcnt_sys_signal
+R3
+R4
 R5
-R6
-IH@EDI2dcjKm:Z?0fmVR_N1
-R7
-R21
-S1
-R9
-R22
-R26
-R23
-R24
-L0 78
-R14
-r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 RlhQ?2o5CnDE[@7Vo>jOa1
 !i10b 1
+!s100 jISK;TV:j^F7nliP:HDgP2
+IgnYZ<9nlI_az<5[:EBjl:0
+S1
+R1
+R6
+R18
+R7
+!i122 0
+L0 77 30
+R8
+R9
+r1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vcnt_unit
+R3
+R4
 R5
-R6
-IRaKBni[P2T5]SNm22X6A>1
-R7
-R8
+!i10b 1
+!s100 zL4Y7H7LiVILg=Z7>JM`A1
+I;A?<XbG8C2>YFdM05E0B[0
 S1
-R9
-R10
+R1
+R6
 Frtl/cnt_unit.sv
-R12
-R13
-L0 34
-R14
+R7
+!i122 0
+L0 35 35
+R8
+R9
 r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 7eOan6PoFEB<cmNFQi@I_3
-!i10b 1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vip_TIMER
+R3
+R4
 R5
-R6
-I@XY;_TVZ7I7^LDc@QGhgE2
-R7
-R8
+!i10b 1
+!s100 d2zXhJZEiTODnoY9HQ:8z0
+I78BQ8nX3?<MS[jmLK_IOR1
 S1
+R1
+R6
+Frtl/IP_TIMER.sv
+R7
+!i122 0
+L0 21 133
+R8
 R9
-R10
-R12
-R13
-L0 22
-R14
 r1
+!s85 0
 31
+R10
+R11
+R12
+!i113 0
+R13
+R14
 R15
-R16
-R17
-R18
-R19
-R20
+R2
 nip_@t@i@m@e@r
-!s100 S6b>K7AcHGo6d8G3[KChb0
-!i10b 1
-!s85 0
-!i111 0
 vlogic_control
+R3
+R4
 R5
-R6
-ISWR?ZR3Dd>_RXLgUXAL?G0
-R7
-R8
+!i10b 1
+!s100 c<URhdLCKL96Aj?lR7nZS0
+If2RhVjYn9`oelf2l1HC@i1
 S1
-R9
-R10
+R1
+R6
 Frtl/logic_control.sv
-R12
-R13
-L0 31
-R14
+R7
+!i122 0
+L0 31 20
+R8
+R9
 r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 fRQDVEhUlX:N56?<W?=[U2
-!i10b 1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vovf_udf_comp
+R3
+R4
 R5
-R6
-ITo<FGH0Qo5TWo?V[W@7gO2
-R7
-R8
+!i10b 1
+!s100 W9DaHLZa1V:P5IY<L[MA@3
+I0LVnjVc`4CMPbj_CVZFi:3
 S1
-R9
-R10
+R1
+R6
 Frtl/ovf_udf_comp.sv
-R12
-R13
-L0 34
-R14
+R7
+!i122 0
+L0 33 61
+R8
+R9
 r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 lg5>aJJecWeJmI0Ra4HZ51
-!i10b 1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vpos_cnt_edge_detect
+R3
+R4
 R5
-R6
-I>oAD:JOeO;j`QSUPV?zQG1
-R7
-R8
-S1
-R9
-R10
-R25
-R12
-R13
-L0 23
-R14
-r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 ;V^MW;MIbmF:HZ2>TWhfH2
 !i10b 1
+!s100 PLZREi;Ye1]B>N>5@5dg31
+InkBHSkGbL7FMVefRbdbFJ1
+S1
+R1
+R6
+R17
+R7
+!i122 0
+L0 21 27
+R8
+R9
+r1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vpos_edge_detect_synced
+R3
+R4
 R5
-R6
-IOKGGZdMjYKh1YlaemLB4N2
-R7
-R8
-S1
-R9
-R10
-R25
-R12
-R13
-L0 57
-R14
-r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 5ioO82B5U33@FEN?;X>JU2
 !i10b 1
+!s100 AE5TTFWEm76e[]zJ]DaTQ2
+Idm;K[mWNV>m6Q^>>9Ki1_1
+S1
+R1
+R6
+R17
+R7
+!i122 0
+L0 55 19
+R8
+R9
+r1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vrw_read_logic
+R3
+R4
 R5
-R6
-I]o]bb9i3AI@Qz<5_MY9Kf1
-R7
-R8
+!i10b 1
+!s100 2W>7;<H?aV=WDcc`fAzcd2
+Ia57fT^5n1habi<A4]BMbB3
 S1
+R1
+R6
+R16
+R7
+!i122 0
+L0 123 38
+R8
 R9
+r1
+!s85 0
+31
 R10
 R11
 R12
+!i113 0
 R13
-L0 123
 R14
-r1
-31
 R15
-R16
-R17
-R18
-R19
-R20
-!s100 6VF`D6lGNi<4bV>RAJ<>H0
-!i10b 1
-!s85 0
-!i111 0
+R2
 vrw_reg_control
+R3
+R4
 R5
-R6
-I4Xn5diGjPjZU[OMblo48T0
-R7
-R8
+!i10b 1
+!s100 XgofJAeYaVK_zOZdLo@?:0
+I_nO;zA4RgCac_?[jV>FVH1
 S1
+R1
+R6
+R16
+R7
+!i122 0
+L0 9 109
+R8
 R9
+r1
+!s85 0
+31
 R10
 R11
 R12
+!i113 0
 R13
-L0 9
 R14
-r1
-31
 R15
-R16
-R17
-R18
-R19
-R20
-!s100 CmDR6]VL?P5zPDkNPPfCU3
-!i10b 1
-!s85 0
-!i111 0
+R2
 vrw_write_logic
+R3
+R4
 R5
-R6
-IUeHTLSGd3P>QFE>kXS;gI2
-R7
-R8
+!i10b 1
+!s100 fVMi9fU_Ak?WA3hWQL_RE3
+I3;8SfeXCMH2foI:``M7AP1
 S1
+R1
+R6
+R16
+R7
+!i122 0
+L0 166 64
+R8
 R9
+r1
+!s85 0
+31
 R10
 R11
 R12
+!i113 0
 R13
-L0 166
 R14
-r1
-31
 R15
-R16
-R17
-R18
-R19
-R20
-!s100 DeD]X^k<TW64bZl:oP>UL1
-!i10b 1
-!s85 0
-!i111 0
+R2
 vsys_signal
+R3
+R4
 R5
-R6
-IT7U:?hE7gC[0F^e<a[1jZ0
-R7
-R21
-S1
-R9
-R22
-R26
-R23
-R24
-L0 13
-R14
-r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-!s100 U`GP=7LU1_>a:G1eFdGeS0
 !i10b 1
+!s100 BCWTOZFa4Pe3n`EcJiWY32
+IXM5CAhYH6FAmMibJ5IU9`1
+S1
+R1
+R6
+R18
+R7
+!i122 0
+L0 13 21
+R8
+R9
+r1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
 vtb_ip_TIMER
+R3
+R4
 R5
-R6
-I>ABZK<Yi6FD3CYNR2WKXH0
-R7
-R21
-S1
-R9
-R22
-R23
-R24
-L0 17
-R14
-r1
-31
-R15
-R16
-R17
-R18
-R19
-R20
-ntb_ip_@t@i@m@e@r
 !i10b 1
-!s100 @B8OndHf5XYGLZ2mEENKJ1
+!s100 ao0:z[gTl=015kIFDOlm73
+IX^D;RzL<1j]Jl^l:6H;6H3
+S1
+R1
+R6
+8tb/tb_ip_TIMER.sv
+R7
+Ftb/TestCase/test_tmr_reg.sv
+Ftb/TestCase/test_tmr_func_basic.sv
+Ftb/TestCase/test_tmr_func_forkjoin.sv
+Ftb/TestCase/test_tmr_func_pause.sv
+Ftb/TestCase/test_tmr_rst_plck2.sv
+Ftb/TestCase/test_tmr_rst_t_load_pclk2.sv
+Ftb/TestCase/test_tmr_fake_udf_ovf.sv
+!i122 0
+L0 11 1061
+R8
+R9
+r1
 !s85 0
-!i111 0
+31
+R10
+R11
+R12
+!i113 0
+R13
+R14
+R15
+R2
+ntb_ip_@t@i@m@e@r

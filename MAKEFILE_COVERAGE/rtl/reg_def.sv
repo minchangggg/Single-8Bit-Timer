@@ -13,6 +13,7 @@
 // Common Parameters
 // ==============================================
 `define DATA_WIDTH 8
+`define ADDR_WIDTH 8 
 
 // ==============================================
 // Default Reset Values
@@ -41,8 +42,8 @@
 `define TCR_WRITE_MASK 8'hB3
 
 // TSR_WRITE_MASK (8'h03 = 8'b0000_0011)
-// TSR[1] = TMR_UDF (Underflow flag, có thể xóa bằng phần mềm)
-// TSR[0] = TMR_OVF (Overflow flag, có thể xóa bằng phần mềm)
+// TSR[1] = TMR_UDF (Underflow flag, can delete by SW)
+// TSR[0] = TMR_OVF (Overflow flag, can delete by SW)
 // Các bit khác là read-only và không thể ghi.
 `define TSR_WRITE_MASK 8'h03
 

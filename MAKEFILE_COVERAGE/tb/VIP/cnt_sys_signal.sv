@@ -11,99 +11,97 @@
 //   - sys_rst_n: The active-low reset signal.
 // =============================================================================
 module sys_signal #(
-  parameter sys_clk_period = 10
+  parameter int sys_clk_period = 10   // ns
 )(
-  output reg sys_clk, sys_rst_n
+  output logic sys_clk,
+  output logic sys_rst_n
 );
-  
-  // Clock Generation: sys_clk
+
+  // Clock generation
   initial begin
     sys_clk = 1'b0;
     forever #(sys_clk_period/2) sys_clk = ~sys_clk;
   end
 
-  // Reset Generation: sys_rst_n
-  initial begin          
-    sys_rst_n = 1'b0;            // Assert reset
-    repeat (2) @(posedge sys_clk); // Wait for a few clock cycles
-    sys_rst_n = 1'b1;            // Release reset
+  // Reset generation: hold reset low for a few cycles, then release it
+  initial begin
+    sys_rst_n = 1'b0;
+    #(sys_clk_period * 5);
+    sys_rst_n = 1'b1;
   end
 
 endmodule
 
-// =============================================================================
+
+// =====================================================================================
 // Module: cnt_clk_in_gen
-// Description: Generates four divided clock signals from a single input clock.
-// Outputs:
-//   - sys_clk: The input clock.
-//   - clk_in: A 4-bit bus containing the divided clocks.
-// =============================================================================
+// Description:
+//   - Generates 4 divided clocks from sys_clk:
+//     clk_div2, clk_div4, clk_div8, clk_div16.
+//   - These serve as the 4 CLK_IN sources for IP_TIMER.
+// =====================================================================================
 module cnt_clk_in_gen (
-  input wire sys_clk,
-  output wire [3:0] clk_in
+  input  logic       sys_clk,
+  output logic [3:0] clk_in
 );
 
-  // Divided Clock Registers
-  reg clk_div2, clk_div4, clk_div8, clk_div16;
-  
+  logic clk_div2, clk_div4, clk_div8, clk_div16;
+
+  // Initialize internal divided clocks
   initial begin
-    // Initialize registers to 0
     clk_div2  = 1'b0;
     clk_div4  = 1'b0;
     clk_div8  = 1'b0;
     clk_div16 = 1'b0;
   end
 
-  // Generate divided clocks from the input clock
+  // Generate divided clocks (testbench -> use always, not always_ff)
   always @(posedge sys_clk)   clk_div2  <= ~clk_div2;
   always @(posedge clk_div2)  clk_div4  <= ~clk_div4;
   always @(posedge clk_div4)  clk_div8  <= ~clk_div8;
   always @(posedge clk_div8)  clk_div16 <= ~clk_div16;
-  
-  // Assign the divided clocks to the output bus
+
+  // Map divided clocks to the output bus
   assign clk_in = {clk_div16, clk_div8, clk_div4, clk_div2};
 
 endmodule
 
+
 // =============================================================================
 // Module: cnt_sys_signal
-// Description: Top-level module that instantiates the clock/reset generator
-//              and the divided clock generator. This module serves as a
-//              convenient wrapper for the testbench.
-// Outputs:
-//   - sys_clk_w: The main system clock.
-//   - sys_rst_n_w: The system reset.
-//   - clk_in_w: The four divided clock signals.
+// Description:
+//   - Wrapper for the testbench: generates sys_clk, sys_rst_n,
+//     and the 4 clk_in signals.
 // =============================================================================
 module cnt_sys_signal #(
-  parameter sys_clk_period = 10
+  parameter int sys_clk_period = 10   // ns
 )(
-  output wire sys_clk_w,
-  output wire sys_rst_n_w,
-  output wire [3:0] clk_in_w  
+  output logic       sys_clk_w,
+  output logic       sys_rst_n_w,
+  output logic [3:0] clk_in_w
 );
-  
-  // Internal wire to connect the two sub-modules
-  wire sys_clk_int;
-  
-  // Instantiate the clock and reset generator
+
+  logic sys_clk_int;
+  logic sys_rst_n_int;
+
+  // Main clock + reset
   sys_signal #(
     .sys_clk_period(sys_clk_period)
-  ) signal_gen_inst (
-    .sys_clk(sys_clk_int),
-    .sys_rst_n(sys_rst_n_w)
+  ) u_sys_signal (
+    .sys_clk   (sys_clk_int),
+    .sys_rst_n (sys_rst_n_int)
   );
 
-  // Instantiate the divided clock generator
-  cnt_clk_in_gen clk_gen_inst (
-    .sys_clk(sys_clk_int),
-    .clk_in(clk_in_w)
+  // Divided clocks
+  cnt_clk_in_gen u_cnt_clk_in_gen (
+    .sys_clk (sys_clk_int),
+    .clk_in  (clk_in_w)
   );
 
-  // Connect the internal clock wire to the output
-  assign sys_clk_w = sys_clk_int;
+  // Drive testbench-visible signals
+  assign sys_clk_w   = sys_clk_int;
+  assign sys_rst_n_w = sys_rst_n_int;
 
 endmodule
 
 `endif // __SYS_TMR_SIGNAL_V__
-
