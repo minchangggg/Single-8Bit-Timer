@@ -172,7 +172,7 @@ A Timer Module in its most basic form is a digital logic circuit that counts up 
 
 ## [Simulation Environment]
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/99579b70-6932-4192-976b-384ab6682e23" width="800">
+  <img src="https://github.com/user-attachments/assets/559408aa-26a9-4ad1-942e-50da28b56da5" width="800">
 </p>
 
 ## [Test plan]
