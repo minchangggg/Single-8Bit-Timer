@@ -115,7 +115,7 @@ A fully-synchronous 8-bit timer IP core with APB interface. Supports programmabl
 
 </div>
 
-## [Block diagram]
+## [DUT - Block diagram]
 A Timer Module in its most basic form is a digital logic circuit that counts up or counts down every clock cycle.
 
 <p align="center">
