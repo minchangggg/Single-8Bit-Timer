@@ -1,9 +1,0 @@
-rtl/IP_TIMER.sv
-rtl/cnt_unit.sv
-rtl/logic_control.sv
-rtl/ovf_udf_comp.sv
-rtl/pos_cnt_edge_detect.sv
-rtl/rw_reg_control.sv
-tb/VIP/APB_trans_bus.sv
-tb/VIP/cnt_sys_signal.sv
-tb/tb_ip_TIMER.sv
